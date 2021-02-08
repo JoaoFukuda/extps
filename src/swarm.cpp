@@ -124,17 +124,15 @@ void Swarm::run_tests() {
 		int port = ports[current_port++];
 		if (port == 0) continue;
 		for (int i = 0; i != retries; ++i) {
-			if (!test_for(address, port, timeout)) {
-				if (i == retries - 1) {
-					io_mu.lock();
-					std::cerr << port << std::endl;
-					io_mu.unlock();
-				}
-			} else {
+			if (test_for(address, port, timeout)) {
 				io_mu.lock();
 				std::cout << port << std::endl;
 				io_mu.unlock();
 				break;
+			} else if (i == retries - 1) {
+				io_mu.lock();
+				std::cerr << port << std::endl;
+				io_mu.unlock();
 			}
 		}
 	}
