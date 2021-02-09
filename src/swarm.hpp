@@ -1,30 +1,40 @@
+#pragma once
+
 #include <atomic>
 #include <string>
 #include <thread>
 #include <vector>
 
-class Swarm {
+struct SwarmConfig
+{
+	bool prettify;
+	int retries = 3;
+	int timeout = 5;
+	int max_threads = 8;
+	std::string address;
+	std::string closed_out;
+	std::string opened_out;
+	std::vector<int> ports;
+
+	SwarmConfig();
+
+	bool add_ports(const std::string & filename);
+	bool add_ports(int first_port, int last_port);
+	bool add_port(int port);
+};
+
+class Swarm
+{
 	private:
-		static int retries;
-		static int timeout;
-		static std::string address;
-		static std::vector<int> ports;
 		static std::atomic<int> current_port;
+		static SwarmConfig option;
 		std::vector<std::thread> threads;
-		int max_threads;
 
 		static void run_tests();
 
 	public:
-		Swarm(const std::string & address, int max_threads);
+		Swarm(const SwarmConfig & option);
 		~Swarm();
-
-		bool set_ports(const std::string & filename);
-		bool set_ports(int last_port);
-		bool set_ports(int first_port, int last_port);
-
-		void set_retries(int retries);
-		void set_timeout(int seconds);
 
 		void run();
 };
