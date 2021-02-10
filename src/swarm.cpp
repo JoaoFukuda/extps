@@ -64,7 +64,7 @@ void Swarm::run_tests()
 		for (int i = 0; i != option.retries; ++i) {
 			if (test_for(option.address, port, option.timeout)) {
 				io_mu.lock();
-				std::cout << (option.prettify ? "\033[32m" : "") << "[success] " << port << (option.prettify ? "\033[m" : "") << std::endl;
+				if (!option.quiet) std::cout << (option.prettify ? "\033[32m" : "") << "[success] " << port << (option.prettify ? "\033[m" : "") << std::endl;
 				if (!option.opened_out.empty()) {
 					std::ofstream outfile(option.opened_out, std::ios_base::app);
 					if (outfile) {
@@ -76,7 +76,7 @@ void Swarm::run_tests()
 				break;
 			} else if (i == option.retries - 1) {
 				io_mu.lock();
-				std::cout << (option.prettify ? "\033[31m" : "") << "[failure] " << port << (option.prettify ? "\033[m" : "") << std::endl;
+				if (!option.quiet) std::cout << (option.prettify ? "\033[31m" : "") << "[failure] " << port << (option.prettify ? "\033[m" : "") << std::endl;
 				if (!option.closed_out.empty()) {
 					std::ofstream outfile(option.closed_out, std::ios_base::app);
 					if (outfile) {

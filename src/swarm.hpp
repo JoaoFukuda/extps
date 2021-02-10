@@ -8,6 +8,7 @@
 struct SwarmConfig
 {
 	bool prettify;
+	bool quiet;
 	int retries = 3;
 	int timeout = 5;
 	int max_threads = 8;
